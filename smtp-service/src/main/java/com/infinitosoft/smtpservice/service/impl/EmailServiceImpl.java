@@ -1,8 +1,8 @@
 package com.infinitosoft.smtpservice.service.impl;
 
 import com.infinitosoft.smtpservice.service.EmailService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

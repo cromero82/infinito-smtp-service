@@ -3,7 +3,7 @@ package com.infinitosoft.smtpservice.api.controller;
 import com.infinitosoft.smtpservice.api.dto.EmailRequest;
 import com.infinitosoft.smtpservice.service.EmailService;
 import com.infinitosoft.smtpservice.util.HtmlTemplateBuilder;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
