@@ -10,6 +10,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.core.io.ByteArrayResource;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -45,6 +46,32 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException e) {
             log.error("Error al construir el mensaje de correo para '{}': {}", to, e.getMessage(), e);
             throw new RuntimeException("No se pudo construir o enviar el correo: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendEmailWithAttachment(String to, String subject, String htmlBody, byte[] attachment, String fileName) throws MailException {
+        try {
+            if (log.isInfoEnabled()) {
+                log.info("Preparando envío de correo con adjunto '{}': from='{}' -> to='{}' subject='{}'", 
+                        fileName, defaultFrom, to, subject == null ? "" : subject);
+            }
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setFrom(defaultFrom);
+            helper.setSubject(subject == null || subject.isBlank() ? "Mensaje de Infinito SMTP" : subject);
+            helper.setText(htmlBody, true);
+            
+            if (attachment != null && fileName != null) {
+                helper.addAttachment(fileName, new ByteArrayResource(attachment));
+            }
+
+            mailSender.send(message);
+            log.info("Correo con adjunto '{}' enviado correctamente a '{}'", fileName, to);
+        } catch (MessagingException e) {
+            log.error("Error al construir el mensaje de correo con adjunto para '{}': {}", to, e.getMessage(), e);
+            throw new RuntimeException("No se pudo construir o enviar el correo con adjunto: " + e.getMessage(), e);
         }
     }
 }
